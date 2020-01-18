@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="js/bootstrap.min.js" ></script>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/Registration.css">
+  </head>
+<body class="text-center">
+
+
+
+<form class="form-signin" action="validate.php" method='POST'>
+<h1 class="head1">Register Here</h1>
+
+<!-- Username -->
+<label for="inputusername" class="sr-only">User Id</label>
+<input type="text"  name="uname" class="form-control" placeholder="Username" required autofocus><br>
+
+<!-- Password -->
+<label for="inputPassword" class="sr-only">Password</label>
+<input type="password" name="pwd" class="form-control" placeholder="Password" required><br>
+
+<!-- GSTIN Number -->
+<label for="gst_num" class="sr-only">User Id</label>
+<input type="number" name="gst_num" class="form-control" placeholder="GSTIN" required><br>
+
+<!-- SignIn Button -->
+<button  class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+</form>
+</body>
+</html>

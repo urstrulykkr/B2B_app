@@ -1,0 +1,17 @@
+/* body{
+  background: rgb(214,6,236);
+background: linear-gradient(90deg, rgba(214,6,236,0.846673703661152) 40%, rgba(251,0,216,0.8550770650056898) 50%);
+} */
+
+.form-signin
+{
+
+  margin-top: 250px;
+  margin-left: 550px;
+  margin-right: 550px;
+  margin-bottom: 10px;
+}
+.form-signin h1
+{
+  color: #FFDD00
+}
