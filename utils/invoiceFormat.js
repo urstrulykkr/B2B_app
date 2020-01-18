@@ -1,43 +1,80 @@
+const fs = require("fs");
+const PDFDocument = require("pdfkit");
+////////////////test
+const data = {
+    shipping: {
+      name: "John Doe",
+      address: "1234 Main Street",
+      city: "San Francisco",
+      state: "CA",
+      country: "US",
+      postal_code: 94111
+    },
+    items: [
+      {
+        item: "TC 100",
+        description: "Toner Cartridge",
+        quantity: 2,
+        amount: 6000
+      },
+      {
+        item: "USB_EXT",
+        description: "USB Cable Extender",
+        quantity: 1,
+        amount: 2000
+      }
+    ],
+    subtotal: 8000,
+    paid: 0,
+    invoice_nr: 1234,
+    GSTIN: "123456ed7c8b9a0"
+  };
+  //In the above object, we have a shipping key that 
+
+////////////////////
 const invoiceShippingCreadentials = data => {
   console.log("Contains user details");
   return {
-    name: data.name,
-    address: data.address,
-    city: data.city,
-    state: data.state,
-    country: data.country,
-    postal_code: data.postal_code,
-    item: data.item,
-    description: data.description,
-    quantity: data.quantity,
-    amount: data.amount,
-    GSTIN: data.GSTIN,
-    invoice_nr: data.invoice_nr,
-    subtotal: data.subtotal,
-    paid: data.paid
+    shipping: {
+        name: data.shipping.name,
+        address: data.shipping.address,
+        city: data.shipping.city,
+        state: data.shipping.state,
+        country: data.shipping.country,
+        postalCode: data.shipping.postalCode
+      },
+      items: [
+        {
+          item: data.items.item,
+          description: data.items.description,
+          quantity: data.items.quantity,
+          amount: data.items.amount
+        }
+        
+      ],
+      subtotal: data.subtotal,
+      paid: data.paid,
+      invoiceNr: data.invoiceNr,
+      GSTIN: data.GSTIN
+    
   };
 };
 
 module.exports = {
   invoiceShippingCreadentials
 };
-
-
-
-const fs = require("fs");
-const PDFDocument = require("pdfkit");
+let doc = new PDFDocument({ size: "A4", margin: 50 });
 
 function createInvoice(data, path) {
   let doc = new PDFDocument({ size: "A4", margin: 50 });
 
-  generateHeader(doc);
-  generateCustomerInformation(doc, invoice);
-  generateInvoiceTable(doc, invoice);
+   generateHeader(doc);
+  generateCustomerInformation(doc, data);
+  generateInvoiceTable(doc, data);
   generateFooter(doc);
 
   doc.end();
-  doc.pipe(fs.createWriteStream(
-      path));
+  doc.pipe(fs.createWriteStream(path));
 }
 
 function generateHeader(data, path) {
@@ -49,11 +86,11 @@ function generateHeader(data, path) {
     .fontSize(10)
     .text("B2B Inc.", 200, 50, { align: "right" })
     .text(data.address, 200, 65, { align: "right" })
-    .text(data.city, data.state,, 200, 80, { align: "right" })
+    .text(data.city, data.state, 200, 80, { align: "right" })
     .moveDown();
 }
 
-function generateCustomerInformation(doc, invoice) {
+function generateCustomerInformation(doc, data) {
   doc
     .fillColor("#444444")
     .fontSize(20)
@@ -71,7 +108,7 @@ function generateCustomerInformation(doc, invoice) {
     .font("Helvetica")
     .text("Invoice Date:", 50, customerInformationTop + 15)
     .text(formatDate(new Date()), 150, customerInformationTop + 15)
-    .text("Balance Due:", data.balanceDue, 50, customerInformationTop + 30)
+    .text("Balance Due:", 50, customerInformationTop + 30)
     .text(
       formatCurrency(data.subtotal - data.paid),
       150,
@@ -91,12 +128,15 @@ function generateCustomerInformation(doc, invoice) {
       300,
       customerInformationTop + 30
     )
+    .font("Helvetica-Bold")
+    .text("GSTIN:" + " " +
+    data.GSTIN, 400, customerInformationTop)
     .moveDown();
 
   generateHr(doc, 252);
 }
 
-function generateInvoiceTable(doc, invoice) {
+function generateInvoiceTable(doc, data) {
   let i;
   const invoiceTableTop = 330;
 
@@ -113,8 +153,8 @@ function generateInvoiceTable(doc, invoice) {
   generateHr(doc, invoiceTableTop + 20);
   doc.font("Helvetica");
 
-  for (i = 0; i < invoice.items.length; i++) {
-    const item = invoice.items[i];
+  for (i = 0; i < data.items.length; i++) {
+    const item = data.items[i];
     const position = invoiceTableTop + (i + 1) * 30;
     generateTableRow(
       doc,
@@ -214,6 +254,8 @@ function formatDate(date) {
 
   return year + "/" + month + "/" + day;
 }
+
+console.log(createInvoice(data,'invoice.pdf'));
 
 module.exports = {
   createInvoice

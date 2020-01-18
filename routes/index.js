@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var invoice = require("../services/invoice");
-var user = require("../utils/invoiceFormats");
+
 /* GET home page. */
 router.get("/", async function(req, res, next) {
   console.log("data", invoice.test);
